@@ -1,0 +1,23 @@
+<?php
+/**
+ * Renders a single blog post detail page (blog/post/detail?id=N).
+ *
+ * Consumes from $block:
+ *   - getData('post_view_model'): \Study\Blog\ViewModel\Post
+ *     - getDetailById(): PostInterface — post resolved from the current request's "id" param.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Study\Blog\ViewModel\Post $blogPost
+ */
+
+?>
+<?php
+$blogPost = $block->getData('post_view_model');
+$blogPostData = $blogPost->getDetailById();
+?>
+<div class="blog-post-list">
+    <h1><?= $escaper->escapeHtml($blogPostData->getTitle()) ?></h1>
+    <p><em><?= $escaper->escapeHtml(__('Created at: %1', $blogPostData->getCreatedAt())) ?></em></p>
+    <p><?= $escaper->escapeHtml($blogPostData->getContent(), ['em','p','strong']) ?></p>
+</div>

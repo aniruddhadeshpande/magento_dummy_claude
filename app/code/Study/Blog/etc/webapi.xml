@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- REST GET /V1/blog/:id — retrieve a single blog post by ID (publicly accessible). -->
+    <route method="GET" url="/V1/blog/:id">
+        <service class="Study\Blog\Api\PostRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <!-- REST POST /V1/blog — create a new blog post (publicly accessible). -->
+    <route method="POST" url="/V1/blog">
+        <service class="Study\Blog\Api\PostRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <!-- REST PUT /V1/blog — update an existing blog post (publicly accessible). -->
+    <route method="PUT" url="/V1/blog">
+        <service class="Study\Blog\Api\PostRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <!-- REST DELETE /V1/blog/:id — delete a blog post by ID (publicly accessible). -->
+    <route method="DELETE" url="/V1/blog/:id" >
+        <service class="Study\Blog\Api\PostRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

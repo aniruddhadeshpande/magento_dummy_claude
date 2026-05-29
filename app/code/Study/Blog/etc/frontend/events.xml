@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!-- Log an info entry whenever a blog post detail page is viewed. -->
+    <event name="blog_study_post_detail">
+        <observer name="study_blog_observer_log_post_detail_view" instance="Study\Blog\Observer\LogPostDetailView"/>
+    </event>
+</config>

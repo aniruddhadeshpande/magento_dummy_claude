@@ -1,0 +1,30 @@
+<?php
+/**
+ * Renders a sidebar listing of all blog posts, used on the post detail layout.
+ *
+ * Consumes from $block:
+ *   - getData('post_view_model'): \Study\Blog\ViewModel\Post
+ *     - getList(): PostInterface[] — all available posts for navigation links.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Study\Blog\ViewModel\Post $blogPost
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php
+$blogPost = $block->getData('post_view_model');
+?>
+<div class="blog-post-sidebar">
+    <p><strong><?= $escaper->escapeHtml(__('Other blog posts')) ?></strong></p>
+    <ul>
+        <?php foreach ($blogPost->getList() as $post): ?>
+            <li>
+                <a href=" <?= $escaper->escapeUrl(
+                    $block->getUrl('blog/post/detail', ['id' => $post->getData('id') ])
+                          ) ?>">
+                    <?= $escaper->escapeHtml($post->getData('title')) ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
