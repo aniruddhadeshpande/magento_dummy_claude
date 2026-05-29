@@ -18,18 +18,22 @@ class PostTest extends TestCase
         $this->model = $objectManager->getObject(Post::class);
     }
 
-    public function testSetAndGetTitle(): void
+    /**
+     * @dataProvider setAndGetProvider
+     */
+    public function testSetAndGet(string $setter, string $getter, string $dataKey, string $value): void
     {
-        $this->assertSame($this->model, $this->model->setTitle('Hello'));
-        $this->assertSame('Hello', $this->model->getTitle());
-        $this->assertSame('Hello', $this->model->getData(PostInterface::TITLE));
+        $this->assertSame($this->model, $this->model->{$setter}($value));
+        $this->assertSame($value, $this->model->{$getter}());
+        $this->assertSame($value, $this->model->getData($dataKey));
     }
 
-    public function testSetAndGetContent(): void
+    public function setAndGetProvider(): array
     {
-        $this->assertSame($this->model, $this->model->setContent('Body text'));
-        $this->assertSame('Body text', $this->model->getContent());
-        $this->assertSame('Body text', $this->model->getData(PostInterface::CONTENT));
+        return [
+            'title' => ['setTitle', 'getTitle', PostInterface::TITLE, 'Hello'],
+            'content' => ['setContent', 'getContent', PostInterface::CONTENT, 'Body text'],
+        ];
     }
 
     public function testGetCreatedAt(): void

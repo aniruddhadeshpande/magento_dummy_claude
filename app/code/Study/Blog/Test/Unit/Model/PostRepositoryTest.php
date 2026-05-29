@@ -41,66 +41,93 @@ class PostRepositoryTest extends TestCase
         $this->repository = new PostRepository($this->postFactory, $this->postResource);
     }
 
-    public function testGetByIdReturnsLoadedPost(): void
+    /**
+     * @dataProvider getByIdProvider
+     */
+    public function testGetById(int $id, ?int $loadedId, ?string $expectedException): void
     {
-        $id = 5;
         $this->postFactory->method('create')->willReturn($this->post);
         $this->postResource->expects($this->once())->method('load')->with($this->post, $id);
-        $this->post->method('getId')->willReturn($id);
+        $this->post->method('getId')->willReturn($loadedId);
+
+        if ($expectedException !== null) {
+            $this->expectException($expectedException);
+            $this->repository->getById($id);
+            return;
+        }
 
         $this->assertSame($this->post, $this->repository->getById($id));
     }
 
-    public function testGetByIdThrowsWhenNotFound(): void
+    public function getByIdProvider(): array
     {
-        $this->postFactory->method('create')->willReturn($this->post);
-        $this->postResource->expects($this->once())->method('load');
-        $this->post->method('getId')->willReturn(null);
-
-        $this->expectException(NoSuchEntityException::class);
-        $this->repository->getById(99);
+        return [
+            'found returns loaded post' => [5, 5, null],
+            'not found throws NoSuchEntity' => [99, null, NoSuchEntityException::class],
+        ];
     }
 
-    public function testSaveReturnsPost(): void
+    /**
+     * @dataProvider saveProvider
+     */
+    public function testSave(?\Exception $resourceException, ?string $expectedException): void
     {
-        $this->postResource->expects($this->once())->method('save')->with($this->post);
+        if ($resourceException !== null) {
+            $this->postResource->method('save')->willThrowException($resourceException);
+        } else {
+            $this->postResource->expects($this->once())->method('save')->with($this->post);
+        }
+
+        if ($expectedException !== null) {
+            $this->expectException($expectedException);
+            $this->repository->save($this->post);
+            return;
+        }
+
         $this->assertSame($this->post, $this->repository->save($this->post));
     }
 
-    public function testSaveWrapsExceptionAsCouldNotSave(): void
+    public function saveProvider(): array
     {
-        $this->postResource->method('save')->willThrowException(new \Exception('db down'));
-        $this->expectException(CouldNotSaveException::class);
-        $this->repository->save($this->post);
+        return [
+            'success returns post' => [null, null],
+            'wraps exception as CouldNotSave' => [new \Exception('db down'), CouldNotSaveException::class],
+        ];
     }
 
-    public function testDeleteByIdReturnsTrue(): void
-    {
-        $id = 3;
+    /**
+     * @dataProvider deleteByIdProvider
+     */
+    public function testDeleteById(
+        int $id,
+        ?int $loadedId,
+        ?\Exception $resourceException,
+        ?string $expectedException
+    ): void {
         $this->postFactory->method('create')->willReturn($this->post);
-        $this->post->method('getId')->willReturn($id);
-        $this->postResource->expects($this->once())->method('delete')->with($this->post);
+        $this->post->method('getId')->willReturn($loadedId);
+
+        if ($resourceException !== null) {
+            $this->postResource->method('delete')->willThrowException($resourceException);
+        } elseif ($loadedId !== null) {
+            $this->postResource->expects($this->once())->method('delete')->with($this->post);
+        }
+
+        if ($expectedException !== null) {
+            $this->expectException($expectedException);
+            $this->repository->deleteById($id);
+            return;
+        }
 
         $this->assertTrue($this->repository->deleteById($id));
     }
 
-    public function testDeleteByIdWrapsExceptionAsCouldNotDelete(): void
+    public function deleteByIdProvider(): array
     {
-        $id = 3;
-        $this->postFactory->method('create')->willReturn($this->post);
-        $this->post->method('getId')->willReturn($id);
-        $this->postResource->method('delete')->willThrowException(new \Exception('locked'));
-
-        $this->expectException(CouldNotDeleteException::class);
-        $this->repository->deleteById($id);
-    }
-
-    public function testDeleteByIdPropagatesNotFound(): void
-    {
-        $this->postFactory->method('create')->willReturn($this->post);
-        $this->post->method('getId')->willReturn(null);
-
-        $this->expectException(NoSuchEntityException::class);
-        $this->repository->deleteById(404);
+        return [
+            'success returns true' => [3, 3, null, null],
+            'wraps exception as CouldNotDelete' => [3, 3, new \Exception('locked'), CouldNotDeleteException::class],
+            'propagates not found from getById' => [404, null, null, NoSuchEntityException::class],
+        ];
     }
 }
