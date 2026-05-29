@@ -1,0 +1,29 @@
+<?php
+/**
+ * Renders the blog post listing page (blog/post/list).
+ *
+ * Consumes from $block:
+ *   - getData('post_view_model'): \Study\Blog\ViewModel\Post
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Study\Blog\ViewModel\Post $blogPost
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php
+$blogPost = $block->getData('post_view_model');
+?>
+<div class="blog-post-list">
+    <h1><?= $escaper->escapeHtml(__('Blog posts')) ?></h1>
+    <ul>
+        <?php foreach ($blogPost ->getList() as $post): ?>
+        <li>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('blog/post/detail', ['id' => $post->getData('id')])) ?>">
+                <?=  $escaper->escapeHtml($post->getData('title')) ?>
+            </a>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+    <p><?= $escaper->escapeHtml(__('Post count: %1', $blogPost->getPostCount())) ?></p>
+</div>
+
