@@ -19,6 +19,8 @@ class Detail implements HttpGetActionInterface
 {
 
     /**
+     *  Controller construct: injects the page factory, request, and event manager.
+     *
      * @param PageFactory $pageFactory
      * @param RequestInterface $request
      * @param EventManagerInterface $manager
