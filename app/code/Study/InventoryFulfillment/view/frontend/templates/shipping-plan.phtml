@@ -1,0 +1,34 @@
+<?php
+/**
+ * Root container for the inventory fulfillment shipping plan page.
+ *
+ * Renders three Knockout UI component scopes (skuLookup, boxConfigurations,
+ * reviewSubmit) and bootstraps them via Magento_Ui/js/core/app using the
+ * jsLayout argument declared in the layout XML.
+ *
+ * Consumes from $block:
+ *   - getJsLayout(): string  JSON-encoded component tree for Magento_Ui/js/core/app.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+?>
+<div id="shipping-plan">
+    <div id="sku-lookup" data-bind="scope: 'skuLookup'">
+        <!-- ko template: getTemplate()  --><!-- /ko -->
+    </div>
+    <div id="box-configurations" data-bind="scope: 'boxConfigurations'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+    <div id="review-submit" data-bind="scope: 'reviewSubmit'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+  "#shipping-plan" :{
+      "Magento_Ui/js/core/app" : <?= $block->getJsLayout() ?>
+  }
+}
+
+</script>

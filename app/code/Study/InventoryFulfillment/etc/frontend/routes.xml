@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <!-- Registers the /inventory-fulfillment/* frontend URL prefix for this module. -->
+        <route id="inventory_fulfillment" frontName="inventory-fulfillment">
+            <module name="Study_InventoryFulfillment"/>
+        </route>
+
+    </router>
+</config>
