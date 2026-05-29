@@ -102,10 +102,10 @@ Trend: failures —→0; cases —→21
 
 | Test class | Cases | Covers (class::methods) | Authored (UTC) |
 |------------|-------|-------------------------|----------------|
-| `app/code/Study/Blog/Test/Unit/Model/PostTest.php` | 4 | `Model\Post::setTitle,getTitle,setContent,getContent,getCreatedAt` | 2026-05-29 |
-| `app/code/Study/Blog/Test/Unit/Model/PostRepositoryTest.php` | 7 | `Model\PostRepository::getById,save,deleteById` | 2026-05-29 |
+| `app/code/Study/Blog/Test/Unit/Model/PostTest.php` | 4 (2 via `setAndGetProvider` + 2 standalone) | `Model\Post::setTitle,getTitle,setContent,getContent,getCreatedAt` | 2026-05-29 |
+| `app/code/Study/Blog/Test/Unit/Model/PostRepositoryTest.php` | 7 (`getByIdProvider` 2 + `saveProvider` 2 + `deleteByIdProvider` 3) | `Model\PostRepository::getById,save,deleteById` | 2026-05-29 |
 | `app/code/Study/Blog/Test/Unit/Observer/LogPostDetailViewTest.php` | 1 | `Observer\LogPostDetailView::execute` | 2026-05-29 |
-| `app/code/Study/Blog/Test/Unit/ViewModel/PostTest.php` | 4 | `ViewModel\Post::getList,getPostCount,getDetailById` | 2026-05-29 |
+| `app/code/Study/Blog/Test/Unit/ViewModel/PostTest.php` | 4 (`getDetailByIdProvider` 2 + 2 standalone) | `ViewModel\Post::getList,getPostCount,getDetailById` | 2026-05-29 |
 | `app/code/Study/Blog/Test/Unit/Controller/Index/IndexTest.php` | 1 | `Controller\Index\Index::execute` | 2026-05-29 |
 | `app/code/Study/Blog/Test/Unit/Controller/Post/ListActionTest.php` | 1 | `Controller\Post\ListAction::execute` | 2026-05-29 |
 | `app/code/Study/Blog/Test/Unit/Controller/Post/DetailTest.php` | 1 | `Controller\Post\Detail::execute` | 2026-05-29 |

@@ -48,21 +48,31 @@ class PostTest extends TestCase
         $this->assertSame(4, $this->viewModel->getPostCount());
     }
 
-    public function testGetDetailByIdLoadsPostFromRequestId(): void
+    /**
+     * @dataProvider getDetailByIdProvider
+     */
+    public function testGetDetailById(string $requestId, int $resolvedId, bool $notFound): void
     {
+        $this->request->method('getParam')->with('id')->willReturn($requestId);
+
+        if ($notFound) {
+            $this->postRepository->method('getById')->willThrowException(new NoSuchEntityException());
+            $this->expectException(NoSuchEntityException::class);
+            $this->viewModel->getDetailById();
+            return;
+        }
+
         $post = $this->getMockForAbstractClass(PostInterface::class);
-        $this->request->method('getParam')->with('id')->willReturn('11');
-        $this->postRepository->expects($this->once())->method('getById')->with(11)->willReturn($post);
+        $this->postRepository->expects($this->once())->method('getById')->with($resolvedId)->willReturn($post);
 
         $this->assertSame($post, $this->viewModel->getDetailById());
     }
 
-    public function testGetDetailByIdPropagatesNotFound(): void
+    public function getDetailByIdProvider(): array
     {
-        $this->request->method('getParam')->with('id')->willReturn('0');
-        $this->postRepository->method('getById')->willThrowException(new NoSuchEntityException());
-
-        $this->expectException(NoSuchEntityException::class);
-        $this->viewModel->getDetailById();
+        return [
+            'loads post from request id' => ['11', 11, false],
+            'propagates not found' => ['0', 0, true],
+        ];
     }
 }
